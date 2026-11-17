@@ -1,0 +1,107 @@
+[package]
+name = "rp2350-rust-latency"
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+publish = false
+description = "Interrupt/scheduling latency measurements for Embassy (and RTIC) on the RP2350A"
+
+# no_std firmware: there is no test harness, so keep `cargo clippy --all-targets`
+# (and `cargo test`) from trying to build one.
+[lib]
+test = false
+bench = false
+
+[[bin]]
+name = "blink"
+test = false
+bench = false
+
+[[bin]]
+name = "s0_thread_idle"
+test = false
+bench = false
+
+[[bin]]
+name = "s0_irq_idle"
+test = false
+bench = false
+
+[[bin]]
+name = "s1_thread_load"
+test = false
+bench = false
+
+[[bin]]
+name = "s1_irq_load"
+test = false
+bench = false
+
+[[bin]]
+name = "baseline_bare_irq"
+test = false
+bench = false
+
+[[bin]]
+name = "s2_thread_ntasks"
+test = false
+bench = false
+
+[[bin]]
+name = "rtic_latency"
+test = false
+bench = false
+
+[[bin]]
+name = "rtic_blink"
+test = false
+bench = false
+
+[features]
+# Target chip: exactly one of `rp2350` (Pico 2, default) or `rp2040` (Pico).
+# RP2040 builds: --no-default-features --features rp2040 --target thumbv6m-none-eabi
+# (or the `cargo rp2040 ...` alias / CHIP=rp2040 in tools/*.sh).
+default = ["rp2350"]
+rp2350 = ["embassy-rp/rp235xa", "rtic/thumbv8main-backend"]
+rp2040 = ["embassy-rp/rp2040", "rtic/thumbv6-backend"]
+# Run clk_sys at 64 MHz (the clock of the paper's nRF52840) instead of the
+# chip default (150 MHz on the RP2350, 125 MHz on the RP2040).
+clk-64mhz = []
+
+[dependencies]
+# embassy-rp 0.10 ships its own multicore-aware thread/interrupt executors
+# (embassy_rp::executor), so embassy-executor needs no platform feature.
+embassy-executor = { version = "0.10.0" }
+embassy-rp = { version = "0.10.0", features = ["unstable-pac", "time-driver", "critical-section-impl", "executor-thread", "executor-interrupt"] }
+embassy-time = { version = "0.5.1" }
+embassy-sync = { version = "0.8.0" }
+embassy-usb = { version = "0.6.0" }
+embassy-futures = { version = "0.1.2" }
+cortex-m = { version = "0.7.7", features = ["inline-asm"] }
+cortex-m-rt = "0.7.5"
+static_cell = "2.1"
+# The Cortex-M0+ (RP2040) has no atomic read-modify-write instructions;
+# static_cell and the executors fall back to critical sections through this.
+portable-atomic = { version = "1.15", features = ["critical-section"] }
+panic-halt = "1.0.0"
+
+# RTIC 2 variants (rtic_latency, rtic_blink). RTIC runs on top of embassy-rp
+# used as a plain HAL/PAC (see README).
+rtic = { version = "2.4.0" } # backend selected by the chip feature
+rtic-monotonics = { version = "3.0.0", features = ["cortex-m-systick"] }
+
+# opt-level = 3 build, as in the paper.
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+debug = 2
+
+# opt-level = "z" build, as in the paper:  cargo build --profile release-z
+[profile.release-z]
+inherits = "release"
+opt-level = "z"
+
+# The dev profile is not used for measurements; keep it small enough to link.
+[profile.dev]
+opt-level = 1

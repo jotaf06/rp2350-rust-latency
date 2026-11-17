@@ -1,0 +1,15 @@
+# RP2350 (Pico 2) is the default target. For the RP2040 (Pico) use the aliases
+# below, e.g.  cargo build-rp2040 --release --bin s0_thread_idle
+[build]
+target = "thumbv8m.main-none-eabihf"
+
+[target.thumbv8m.main-none-eabihf]
+runner = "picotool load -u -v -x -t elf"
+
+[target.thumbv6m-none-eabi]
+runner = "picotool load -u -v -x -t elf"
+
+[alias]
+build-rp2040 = "build --no-default-features --features rp2040 --target thumbv6m-none-eabi"
+run-rp2040 = "run --no-default-features --features rp2040 --target thumbv6m-none-eabi"
+clippy-rp2040 = "clippy --no-default-features --features rp2040 --target thumbv6m-none-eabi"

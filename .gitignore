@@ -1,0 +1,19 @@
+# Builds
+/target/
+/build-zephyr/
+
+# Gerados localmente pelo tools/analyze.py (dados das medições)
+/results/
+/results-rp2040/
+/results-synthetic/
+
+# Ficam só na máquina local: apresentação, PDFs e arquivos de agentes
+/apresentacao/
+*.pdf
+/CLAUDE.md
+/HANDOFF.md
+/DECISIONS.md
+/.claude/
+
+# Python
+__pycache__/
