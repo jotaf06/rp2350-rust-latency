@@ -1,0 +1,25 @@
+# Options of the latency application. The variants are selected with the
+# configuration fragments next to this file (see tools/zephyr.sh).
+
+menu "Latency measurement"
+
+config LAT_COOP
+	bool "Cooperative threads"
+	help
+	  Measured thread and CPU load are cooperative threads of the same
+	  priority: the load is never preempted and only gives the CPU away at
+	  k_yield(). This is the counterpart of Embassy's thread executor.
+	  When disabled, both are preemptive and the measured thread has the
+	  higher priority (counterpart of RTIC / Embassy InterruptExecutor).
+
+config LAT_PROFILE
+	string "Profile name reported in META"
+	default "release"
+
+config LAT_OPT
+	string "Optimisation level reported in META"
+	default "3"
+
+endmenu
+
+source "Kconfig.zephyr"

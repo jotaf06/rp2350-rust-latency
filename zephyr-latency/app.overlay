@@ -1,0 +1,9 @@
+/* One CDC ACM port. hw-flow-control makes uart_poll_out() wait for buffer
+ * space instead of dropping bytes when a batch is being sent. */
+&zephyr_udc0 {
+	cdc_acm_uart0: cdc_acm_uart0 {
+		compatible = "zephyr,cdc-acm-uart";
+		hw-flow-control;
+		tx-fifo-size = <4096>;
+	};
+};
