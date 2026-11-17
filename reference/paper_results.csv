@@ -1,0 +1,30 @@
+# Vandervelden et al., "Overview of Embedded Rust Operating Systems and Frameworks",
+# Sensors 2024, 24, 5818. https://doi.org/10.3390/s24175818
+# Table 3 (latencies, mean values, idle system) and Table 4 (memory of a 250 ms blink, opt-level "z").
+# Hardware: nRF52840-DK, Cortex-M4 at 64 MHz.  cycles = us * 64.
+table,system,opt,metric,value,unit
+meta,paper,,clk_hz,64000000,Hz
+latency,Embassy,3,irq_lat,0.822,us
+latency,Embassy,3,isr_dur,4.844,us
+latency,Embassy,3,sched_lat,4.164,us
+latency,Embassy,3,total,9.830,us
+latency,RTIC,3,irq_lat,0.668,us
+latency,RTIC,3,isr_dur,2.207,us
+latency,RTIC,3,sched_lat,1.135,us
+latency,RTIC,3,total,4.010,us
+latency,Embassy,z,irq_lat,1.03,us
+latency,Embassy,z,isr_dur,6.573,us
+latency,Embassy,z,sched_lat,5.7,us
+latency,Embassy,z,total,13.3,us
+latency,RTIC,z,irq_lat,0.995,us
+latency,RTIC,z,isr_dur,2.825,us
+latency,RTIC,z,sched_lat,1.432,us
+latency,RTIC,z,total,5.252,us
+memory,Embassy,z,text,9588,bytes
+memory,Embassy,z,data,112,bytes
+memory,Embassy,z,bss,34264,bytes
+memory,Embassy,z,total,43964,bytes
+memory,RTIC,z,text,6864,bytes
+memory,RTIC,z,data,0,bytes
+memory,RTIC,z,bss,40,bytes
+memory,RTIC,z,total,6904,bytes
